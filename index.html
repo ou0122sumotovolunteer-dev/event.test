@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>レトロこみちイベント | 洲本市</title>
+  <style>
+/* Ensure icon-circle buttons are visually distinct and hover-ready */
+.icon-circle {
+  display: inline-block;
+  border-radius: 12px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.icon-circle:hover {
+  animation: wobble 0.8s ease-in-out infinite !important;
+  transform: scale(1.35) !important;
+  box-shadow: 0 18px 32px rgba(0,0,0,0.30) !important;
+  filter: brightness(1.3) !important;
+}
+    body {
+      font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+      background-color: #f8f1e4;
+      color: #4a3d2f;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #d4b98c;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 5px double #4a3d2f;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      letter-spacing: 0.1rem;
+    }
+    nav {
+      background: #e8dcc0;
+      border-bottom: 2px solid #4a3d2f;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      font-size: 1.1rem;
+    }
+    nav a {
+      color: #4a3d2f;
+      text-decoration: none;
+    }
+    section {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fffdf8;
+      border: 2px solid #d8c7a5;
+      border-radius: 8px;
+    }
+    h2 {
+      border-bottom: 2px solid #d4b98c;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+    .timetable-table, .event-list {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .timetable-table th, .timetable-table td {
+      border: 1px solid #bfae8f;
+      padding: 10px;
+      background-color: #fff8ee;
+    }
+    .event-item {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f7efe2;
+      border-left: 5px solid #b48a60;
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #d4b98c;
+      border-top: 5px double #4a3d2f;
+      margin-top: 40px;
+    }
+    
+
+
+  /* Hover effects for Visitor/Know cards */
+a[href="#visitor"], a[href="#know"] {
+  transition: all 0.25s ease;
+  filter: brightness(0.9);
+}
+a[href="#visitor"]:hover, a[href="#know"]:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+  filter: brightness(1.05);
+}
+@keyframes wobble {
+  0% { transform: scale(1.35) rotate(0deg); }
+  20% { transform: scale(1.38) rotate(3deg); }
+  50% { transform: scale(1.35) rotate(0deg); }
+  80% { transform: scale(1.38) rotate(-3deg); }
+  100% { transform: scale(1.35) rotate(0deg); }
+}
+
+</style>
+<style>
+  
+ /* ★控えめで上品なテキストホバーエフェクト★ */
+h3:hover, a:hover, .section-title:hover {
+    transition: all 0.25s ease-in-out !important;
+    transform: scale(1.06) !important;
+
+    /* 柔らかいレトロ光 */
+    text-shadow:
+        0 0 4px rgba(255,255,255,0.6),
+        0 0 8px rgba(255,200,150,0.5) !important;
+
+    color: #fffaf0 !important;
+    letter-spacing: 0.5px;
+
+    animation: soft-wobble 0.35s ease-in-out infinite alternate;
+}
+
+/* 優しい揺れアニメーション */
+@keyframes soft-wobble {
+    0% { transform: scale(1.06) translateX(0); }
+    100% { transform: scale(1.06) translateX(2px); }
+}
+
+/* Hover effects for circular icons */
+.icon-circle img {
+  opacity: 0.55;
+  transition: all 0.25s ease;
+}
+.icon-circle {
+  transition: all 0.25s ease;
+}
+.icon-circle:hover {
+  transform: scale(1.12);
+  box-shadow: 0 10px 18px rgba(0,0,0,0.22);
+}
+.icon-circle:hover img {
+  opacity: 1;
+  filter: brightness(3.2) saturate(2.2) contrast(1.5);
+  transform: scale(1.45);
+}
+  
+  /* 下部ナビリンク用ホバーエフェクト */
+nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease-in-out;
+  color: #4a3d2f; /* 通常文字色 */
+  text-decoration: none;
+}
+
+
+
+nav a:hover {
+  transform: scale(1.1); /* 少し拡大 */
+  color: #fff; /* 文字色を明るく */
+  text-shadow: 0 0 6px rgba(255,255,255,0.7); /* 柔らかい光 */
+}
+
+nav a:hover img {
+  transform: scale(2); /* アイコン拡大 */
+  filter: brightness(1) saturate(2.5); /* アイコンを明るく・彩度UP */
+}
+
+
+</style>
+</head>
+<body style="margin:0; padding:0; font-family:'Hiragino Sans','Yu Gothic',sans-serif; background:#f0f8ff;">
+
+  <!-- Hero Section with Background Image and Title -->
+  <section style="position:relative; width:100%; height:70vh; background:url('hero.jpg') center/cover no-repeat; display:flex; align-items:center; justify-content:center; color:white; text-shadow:0 2px 8px rgba(0,0,0,0.4);">
+    <div style="text-align:center;">
+      <h1 style="font-size:3.2rem; margin:0;">レトロこみちイベント</h1>
+      <p style="font-size:1.5rem; margin-top:10px;">兵庫県洲本市 / 特別開催</p>
+    </div>
+    <div id="countdown" style="position:absolute; right:20px; top:20px; background:linear-gradient(135deg, #ffecd2, #fcb69f); color:#333; padding:10px 20px; border-radius:12px; font-size:1.2rem; box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+      開催まで：00日00時間00分
+    </div>
+  </section>
+
+  <!-- Wave Divider -->
+  <div style="width:100%; height:80px; background:url('wave.svg') bottom/cover no-repeat;"></div>
+
+  <!-- Visitor & Know Sections -->
+  <section style="max-width:1100px; margin:0 auto; padding:20px; display:flex; flex-wrap:wrap; gap:20px;">
+
+    <a href="#visitor" style="flex:1 1 calc(50% - 20px); background:linear-gradient(135deg,#b3d4ff,#d7b3ff); padding:30px; border-radius:20px; text-decoration:none; color:white; font-size:1.6rem; font-weight:600; display:flex; align-items:center; justify-content:center; height:150px; box-shadow:0 4px 10px rgba(0,0,0,0.15);">
+      ご来場の方へ
+    </a>
+
+    <a href="#know" style="flex:1 1 calc(50% - 20px); background:linear-gradient(135deg,#9fe7c8,#a4d96c); padding:30px; border-radius:20px; text-decoration:none; color:white; font-size:1.6rem; font-weight:600; display:flex; align-items:center; justify-content:center; height:150px; box-shadow:0 4px 10px rgba(0,0,0,0.15);">
+      このイベントを知る
+    </a>
+
+  </section>
+
+  <!-- Icon Navigation Section -->
+  <section id="know" style="max-width:1100px; margin:40px auto; background:linear-gradient(135deg, #ffecd2, #fcb69f); padding:40px; border-radius:25px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">
+    <h2 style="text-align:center; font-size:2rem; margin-bottom:30px;">イベントを知る</h2>
+    <div style="display:flex; flex-wrap:wrap; gap:30px; justify-content:center;">
+
+      <a href=\"map.html\" class=\"icon-circle\" style="width:180px; height:180px; background:linear-gradient(135deg,#b3d4ff,#6fa8ff); border-radius:50%; border:2px solid #ddd; display:flex; flex-direction:column; align-items:center; justify-content:center; text-decoration:none; color:#333; font-size:1.2rem; box-shadow:0 3px 8px rgba(0,0,0,0.08);"; border-radius:50%; border:2px solid #ddd; display:flex; flex-direction:column; align-items:center; justify-content:center; text-decoration:none; color:#333; font-size:1.2rem; box-shadow:0 3px 8px rgba(0,0,0,0.08);">
+        <img src="map.svg" style="width:45px; margin-bottom:10px;">
+        マップ
+      </a>
+
+      <a href=\"timetable.html\" class=\"icon-circle\" style="width:180px; height:180px; background:linear-gradient(135deg,#9fe7c8,#4ac79b); border-radius:50%; border:2px solid #ddd; display:flex; flex-direction:column; align-items:center; justify-content:center; text-decoration:none; color:#333; font-size:1.2rem; box-shadow:0 3px 8px rgba(0,0,0,0.08);"; border-radius:50%; border:2px solid #ddd; display:flex; flex-direction:column; align-items:center; justify-content:center; text-decoration:none; color:#333; font-size:1.2rem; box-shadow:0 3px 8px rgba(0,0,0,0.08);">
+        <img src="time.svg" style="width:45px; margin-bottom:10px;">
+        タイムテーブル
+      </a>
+
+      <a href=\"search.html\" class=\"icon-circle\" style="width:180px; height:180px; background:linear-gradient(135deg,#ffe9a3,#ffd54f); border-radius:50%; border:2px solid #ddd; display:flex; flex-direction:column; align-items:center; justify-content:center; text-decoration:none; color:#333; font-size:1.2rem; box-shadow:0 3px 8px rgba(0,0,0,0.08);"; border-radius:50%; border:2px solid #ddd; display:flex; flex-direction:column; align-items:center; justify-content:center; text-decoration:none; color:#333; font-size:1.2rem; box-shadow:0 3px 8px rgba(0,0,0,0.08);">
+        <img src="search.svg" style="width:45px; margin-bottom:10px;">
+        企画検索
+      </a>
+
+      <a href=\"list.html\" class=\"icon-circle\" style="width:180px; height:180px; background:linear-gradient(135deg,#d7b3ff,#b57aff); border-radius:50%; border:2px solid #ddd; display:flex; flex-direction:column; align-items:center; justify-content:center; text-decoration:none; color:#333; font-size:1.2rem; box-shadow:0 3px 8px rgba(0,0,0,0.08);"; border-radius:50%; border:2px solid #ddd; display:flex; flex-direction:column; align-items:center; justify-content:center; text-decoration:none; color:#333; font-size:1.2rem; box-shadow:0 3px 8px rgba(0,0,0,0.08);">
+        <img src="list.svg" style="width:45px; margin-bottom:10px;">
+        企画一覧
+      </a>
+
+    </div>
+  </section>
+
+  <!-- History Section -->
+  <section style="max-width:1100px; margin:40px auto; padding:30px; background:linear-gradient(135deg, #ffecd2, #fcb69f); border-radius:20px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+    <h2 style="font-size:1.8rem;">過去のイベントの流れ</h2>
+    <p style="line-height:1.8;">レトロこみちイベントの歴史、これまでの取り組み、参加者の思い出などを紹介します。</p>
+  </section>
+
+  <!-- Bottom Navigation Bar -->
+ <nav style="position:fixed; bottom:0; left:50%; transform:translateX(-50%); width:90%; background:linear-gradient(135deg, #ffecd2, #fcb69f); border-radius:40px; box-shadow:0 4px 14px rgba(0,0,0,0.15); padding:10px 0; display:flex; justify-content:space-around; font-size:0.9rem;">
+  <a href="map.html" style="text-align:center; text-decoration:none; color:#4a3d2f;">
+    <img src="map.svg" style="width:17px;">Map
+  </a>
+  <a href="timetable.html" style="text-align:center; text-decoration:none; color:#4a3d2f;">
+    <img src="time.svg" style="width:17px;">Timetable
+  </a>
+  <a href="search.html" style="text-align:center; text-decoration:none; color:#4a3d2f;">
+    <img src="search.svg" style="width:17px;">Search
+  </a>
+  <a href="mypage.html" style="text-align:center; text-decoration:none; color:#4a3d2f;">
+    <img src="user.svg" style="width:17px;">My Page
+  </a>
+  <a href="list.html" style="text-align:center; text-decoration:none; color:#4a3d2f;">
+    <img src="list.svg" style="width:17px;">List
+  </a>
+</nav>
+
+
+<script>
+// Countdown to May 3 next year
+(function(){
+  const countdownEl = document.getElementById('countdown');
+  const targetDate = new Date(new Date().getFullYear() + 1, 4, 3, 0, 0, 0);
+
+  function updateCountdown(){
+    const now = new Date();
+    const diff = targetDate - now;
+    if(diff <= 0){ countdownEl.textContent = "開催中！"; return; }
+
+    const days = Math.floor(diff / (1000*60*60*24));
+    const hours = Math.floor((diff / (1000*60*60)) % 24);
+    const mins = Math.floor((diff / (1000*60)) % 60);
+
+    countdownEl.textContent = `開催まで：${days}日${hours}時間${mins}分`;
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 60000);
+})();
+</script>
+</body>
+</html>
