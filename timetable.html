@@ -36,54 +36,7 @@
   .tiny{font-size:13px;color:#666}
   .category-pill{display:inline-block;padding:6px 8px;border-radius:999px;background:#f1f6ff;color:#234;border:1px solid #e1e9ff;font-size:12px;margin-right:6px}
 
-    /* ============================================================
-   あなたのフッター（完全コピー）＋ MyPage強調
-============================================================ */
-.bottom-nav {
-    position:fixed; 
-    bottom:0; 
-    left:50%; 
-    transform:translateX(-50%); 
-    width:90%; 
-    background:linear-gradient(135deg, #ffecd2, #fcb69f); 
-    border-radius:40px; 
-    box-shadow:0 4px 14px rgba(0,0,0,0.15); 
-    padding:10px 0; 
-    display:flex; 
-    justify-content:space-around; 
-    font-size:0.9rem;
-    z-index:999;
-}
-.bottom-nav a {
-    text-align:center; 
-    text-decoration:none; 
-    color:#4a3d2f;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:3px;
-}
 
-/*** ★ MyPage強調 ★ ***/
-.bottom-nav a.active {
-    color:#000;
-    font-weight:700;
-    transform:scale(1.08);
-}
-.bottom-nav a.active img {
-    filter:brightness(0.2);
-}
-  
-  nav a:hover {
-  transform: scale(1.1); /* 少し拡大 */
-  color: #fff; /* 文字色を明るく */
-  text-shadow: 0 0 6px rgba(255,255,255,0.7); /* 柔らかい光 */
-}
-
-nav a:hover img {
-  transform: scale(2); /* アイコン拡大 */
-  filter: brightness(1) saturate(2.5); /* アイコンを明るく・彩度UP */
-}
   
 </style>
 </head>
@@ -209,29 +162,6 @@ function openSheet(ev){
       <h3 style="margin:0 0 8px 0">さらに詳細</h3>
       <div class="tiny">${details}</div>
     </div>
-
-      <nav class="bottom-nav">
-  
-  <a href="map.html">
-    <img src="map.svg" style="width:17px;">Map
-  </a>
-  <a href="timetable.html" class="active">
-    <img src="time.svg" style="width:17px;">
-    Timetable
-  </a>
-  <a href="search.html">
-    <img src="search.svg" style="width:17px;">Search
-  </a>
-
-
-  <a href="mypage.html">
-    <img src="user.svg" style="width:17px;">My Page
-  </a>
-
-  <a href="list.html">
-    <img src="list.svg" style="width:17px;">List
-  </a>
-</nav>
   `;
 
   document.getElementById('favBtn').onclick = ()=>{
