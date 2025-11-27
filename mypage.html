@@ -20,7 +20,7 @@
   .wrap{max-width:1000px;margin:28px auto;padding:20px}
   header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
   .brand{display:flex;align-items:center;gap:12px}
-  .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(180deg,var(--accent),#6fb7dd);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(10,60,100,0.08)}
+  .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(180deg,var(--accent),#6fb7dd);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px}
   h1{font-size:1.2rem;margin:0}
   .controls{display:flex;gap:10px;align-items:center}
   button{background:var(--soft);border:0;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600}
@@ -45,7 +45,7 @@
   .chart-wrap{display:flex;align-items:center;gap:12px}
   canvas{max-width:100%}
   .badge-shelf{display:flex;gap:10px;flex-wrap:wrap}
-  .badge{width:72px;height:72px;border-radius:10px;background:#f4fbff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;color:var(--muted);border:1px dashed #e6f2fb}
+  .badge{width:72px;height:72px;border-radius:10px;background:#f4fbff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;color:var(--muted);border:1px dashed #e6f3fb}
   .badge.locked{opacity:0.36}
   .share-area{display:flex;gap:8px;flex-direction:column}
   .input{padding:8px;border-radius:8px;border:1px solid #e6eef5;background:#fbfeff}
@@ -53,7 +53,7 @@
   .small{font-size:13px;color:var(--muted)}
   footer{margin-top:20px;text-align:center;color:var(--muted);font-size:13px}
   /* sheet style (reuse similar to timetable) */
-  .sheet{position:fixed;left:0;right:0;bottom:-520px;background:#fff;border-radius:18px 18px 0 0;padding:16px;box-shadow:0 -8px 40px rgba(0,0,0,0.12);transition:bottom .28s;max-height:86vh;overflow:auto}
+  .sheet{position:fixed;left:0;right:0;bottom:-520px;background:#fff;border-radius:18px 18px 0 0;padding:16px;box-shadow:0 -8px 40px rgba(0,0,0,0.12);transition:bottom .28s;max-height:86vh;overflow:auto;z-index:800}
   .sheet.open{bottom:0}
   .handle{width:56px;height:6px;background:#ddd;border-radius:6px;margin:8px auto}
   .flexcol{display:flex;flex-direction:column}
@@ -63,8 +63,9 @@
   .right{margin-left:auto}
   .danger-link{color:var(--danger);cursor:pointer;text-decoration:underline}
   @media(max-width:980px){
-    .grid{grid-template-columns:1fr; padding-bottom:80px}
+    .grid{grid-template-columns:1fr; padding-bottom:120px}
     .controls{flex-wrap:wrap}
+    .card{padding:12px}
   }
   
   /* ============================================================
@@ -72,18 +73,19 @@
 ============================================================ */
 .bottom-nav {
     position:fixed; 
-    bottom:0; 
+    bottom:10px; 
     left:50%; 
     transform:translateX(-50%); 
-    width:90%; 
+    width:92%; 
     background:linear-gradient(135deg, #ffecd2, #fcb69f); 
     border-radius:40px; 
     box-shadow:0 4px 14px rgba(0,0,0,0.15); 
     padding:10px 0; 
     display:flex; 
     justify-content:space-around; 
-    font-size:0.9rem;
+    font-size:0.95rem;
     z-index:999;
+    touch-action:manipulation;
 }
 .bottom-nav a {
     text-align:center; 
@@ -92,29 +94,38 @@
     display:flex;
     flex-direction:column;
     align-items:center;
-    gap:3px;
+    gap:4px;
+    padding:8px 6px;
+    border-radius:12px;
+    min-width:54px;
+    min-height:44px; /* タップ領域確保 */
 }
 
 /*** ★ MyPage強調 ★ ***/
 .bottom-nav a.active {
     color:#000;
     font-weight:700;
-    transform:scale(1.08);
+    transform:scale(1.06);
 }
 .bottom-nav a.active img {
     filter:brightness(0.2);
 }
   
-  nav a:hover {
-  transform: scale(1.1); /* 少し拡大 */
+nav a:hover {
+  transform: scale(1.05); /* 少し拡大 */
   color: #fff; /* 文字色を明るく */
   text-shadow: 0 0 6px rgba(255,255,255,0.7); /* 柔らかい光 */
 }
 
 nav a:hover img {
-  transform: scale(2); /* アイコン拡大 */
-  filter: brightness(1) saturate(2.5); /* アイコンを明るく・彩度UP */
+  transform: scale(1.15); /* アイコン拡大 */
+  filter: brightness(1) saturate(1.6); /* アイコンを明るく・彩度UP */
 }
+
+/* modal */
+.modal-backdrop{position:fixed;left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal{background:white;border-radius:12px;padding:18px;max-width:420px;width:92%;box-shadow:0 8px 36px rgba(0,0,0,0.2)}
+.preview-banner{background:linear-gradient(90deg,#fff7ea,#fff3d8);padding:8px;border-radius:8px;border:1px solid #ffe9bf;margin-bottom:10px}
 
 </style>
 </head>
@@ -124,8 +135,8 @@ nav a:hover img {
     <div class="brand">
       <div class="logo">RC</div>
       <div>
-        <h1>マイページ — レトロこみちイベント</h1>
-        <div class="small muted">お気に入りを集めて、ポイントをためよう</div>
+        <h1 id="pageTitle">マイページ — レトロこみちイベント</h1>
+        <div class="small muted" id="greeting">お気に入りを集めて、ポイントをためよう</div>
       </div>
     </div>
 
@@ -150,7 +161,7 @@ nav a:hover img {
         </div>
 
         <div style="margin-top:12px" class="small muted">
-          <label><input type="checkbox" id="autoOpenShared" /> シェアリンクを開いた際、自動で該当イベント詳細を開く</label>
+          <label><input type="checkbox" id="autoOpenShared" /> シェアリンクを開いた際、自動で該当イベント詳細を開く（設定を保存）</label>
         </div>
 
       </div>
@@ -181,7 +192,7 @@ nav a:hover img {
           </div>
 
           <div class="row" style="margin-top:8px;">
-            <button id="genText" >共有用テキスト生成</button>
+            <button id="genText" class="">共有用テキスト生成</button>
             <button id="genQr" >QR を表示</button>
             <button id="openShare" >リンクを新しいタブで開く</button>
           </div>
@@ -225,6 +236,15 @@ nav a:hover img {
           <button id="btnClearFavs">お気に入りのみリセット</button>
           <button id="btnClearMemo">メモを全部消す</button>
         </div>
+
+        <hr style="margin:12px 0">
+        <div class="small muted" style="margin-bottom:6px">マイページ表示名</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="myNameInput" class="input" placeholder="例: うまる" />
+          <button id="saveNameBtn" class="btn-primary">保存</button>
+          <button id="clearNameBtn">クリア</button>
+        </div>
+        <div class="small muted" style="margin-top:8px">保存された表示名: <span id="currentName">—</span></div>
       </div>
     </aside>
   </div>
@@ -263,25 +283,29 @@ nav a:hover img {
   <div id="sheetContent" style="padding-bottom:40px"></div>
 </div>
 
+<!-- modal for share accept -->
+<div id="shareAcceptModal" style="display:none"></div>
+
 <script>
 /*
-  mypage.html
+  mypage.html (改良版)
   - uses localStorage keys:
     fav_ids: [id,...]
     done_ids: [id,...]
     memo_<id>: "text"
+    my_name: "表示名"
+    auto_open_shared: "1" or "0"
   - 1 event = 10 points
   - goal = 200pt (changeable)
-  - share URL format: current_path?fav=101,102&done=101,205
+  - share URL format: current_path?fav=101,102&done=101,205&sharer=%E3%81%86%E3%81%BE%E3%82%8B
 */
 
-// Sample events: replace or merge with your real events array if needed.
 let events = [
-  {id:101,title:'オープニングトーク',start:'10:00',end:'10:30',place:'メインホール',description:'イベントのはじまりの挨拶です。',details:'出演者: AAA\n持ち物: 特になし',image:'https://picsum.photos/seed/101/400/240',category:'stage'},
-  {id:102,title:'ワークショップA',start:'11:00',end:'12:00',place:'Room A',description:'クリエイティブなワークショップ',details:'対象: 初心者歓迎\n注意: 汚れても良い服装で',image:'https://picsum.photos/seed/102/400/240',category:'workshop'},
-  {id:103,title:'昭和写真トーク',start:'12:30',end:'13:30',place:'ギャラリー',description:'昭和の写真についてのトークショー',details:'ゲスト: 鈴木太郎',image:'https://picsum.photos/seed/103/400/240',category:'talk'},
-  {id:104,title:'音楽ライブ',start:'14:00',end:'15:00',place:'ステージ前',description:'レトロバンドのライブ',details:'演奏: レトロBAND',image:'https://picsum.photos/seed/104/400/240',category:'stage'},
-  {id:105,title:'展示解説',start:'15:30',end:'16:00',place:'展示室',description:'展示の見どころを紹介',details:'解説: 学芸員',image:'https://picsum.photos/seed/105/400/240',category:'exhibit'}
+  {id:101,title:'オープニングトーク',start:'10:00',end:'10:30',place:'メインホール',description:'イベントのはじまりの挨拶です。',details:'出演者: AAA\n持ち物: 特に無し',image:'https://picsum.photos/seed/101/400/240',category:'トーク'},
+  {id:102,title:'ワークショップA',start:'11:00',end:'12:00',place:'Room A',description:'クリエイティブなワークショップ',details:'対象: 初心者歓迎\n注意: 汚れてもOKな服装',image:'https://picsum.photos/seed/102/400/240',category:'ワークショップ'},
+  {id:103,title:'昭和写真トーク',start:'12:30',end:'13:30',place:'ギャラリー',description:'昭和の写真についてのトークショー',details:'ゲスト: 鈴木太郎',image:'https://picsum.photos/seed/103/400/240',category:'トーク'},
+  {id:104,title:'音楽ライブ',start:'14:00',end:'15:00',place:'ステージ前',description:'レトロバンドのライブ',details:'演奏: レトロBAND',image:'https://picsum.photos/seed/104/400/240',category:'ライブ'},
+  {id:105,title:'展示解説',start:'15:30',end:'16:00',place:'展示室',description:'展示の見どころを紹介',details:'解説: 学芸員',image:'https://picsum.photos/seed/105/400/240',category:'展示'},
 ];
 
 // config
@@ -302,31 +326,48 @@ const overlapAlertEl = $('overlapAlert');
 const shareUrlEl = $('shareUrl');
 const qrImgEl = $('qrImg');
 const shareTextEl = $('shareText');
+const modalEl = $('shareAcceptModal');
+const myNameInput = $('myNameInput');
+const saveNameBtn = $('saveNameBtn');
+const clearNameBtn = $('clearNameBtn');
+const currentNameEl = $('currentName');
 
 function getLocalArr(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
 function setLocalArr(key,arr){ localStorage.setItem(key, JSON.stringify(arr)); }
 
 let favIds = getLocalArr('fav_ids');
 let doneIds = getLocalArr('done_ids');
-let autoOpenShared = true;
 
-// if query contains fav/done, optionally apply
-function applyQueryParamsOnLoad(){
-  const params = new URLSearchParams(location.search);
-  const favParam = params.get('fav');
-  const doneParam = params.get('done');
-  const auto = params.get('auto');
-  if(favParam){
-    const ids = favParam.split(',').map(s=>Number(s)).filter(Boolean);
-    if(ids.length) { favIds = Array.from(new Set([...favIds,...ids])); setLocalArr('fav_ids',favIds); }
-  }
-  if(doneParam){
-    const ids = doneParam.split(',').map(s=>Number(s)).filter(Boolean);
-    if(ids.length){ doneIds = Array.from(new Set([...doneIds,...ids])); setLocalArr('done_ids',doneIds); }
-  }
-  if(auto==='0') autoOpenShared=false;
+// preview mode when opening someone else's shared link
+let previewMode = false;
+let previewFavIds = [];
+let previewDoneIds = [];
+let previewSharer = '';
+
+// autoOpenShared persisted
+let autoOpenShared = (localStorage.getItem('auto_open_shared') !== '0'); // default true
+
+// load name
+let myName = localStorage.getItem('my_name') || '';
+function updateNameUI(){
+  currentNameEl.textContent = myName || '—';
+  myNameInput.value = myName || '';
+  const greeting = myName ? `こんにちは、${myName}さん` : 'お気に入りを集めて、ポイントをためよう';
+  $('greeting').textContent = greeting;
 }
-applyQueryParamsOnLoad();
+updateNameUI();
+
+// if query contains fav/done, optionally apply (we won't auto-import; only prepare)
+function parseQueryParams(){
+  const params = new URLSearchParams(location.search);
+  return {
+    favParam: params.get('fav'),
+    doneParam: params.get('done'),
+    evParam: params.get('ev'),
+    sharerParam: params.get('sharer'),
+    autoParam: params.get('auto'),
+  };
+}
 
 function renderAll(){
   renderFavList();
@@ -337,25 +378,27 @@ function renderAll(){
   // update share url
   shareUrlEl.value = genShareUrl();
 }
+
 function renderFavList(){
   favListEl.innerHTML = '';
-  if(favIds.length===0){
-    favListEl.innerHTML = '<div class="tiny muted">お気に入りに入れたイベントはここに表示されます。</div>';
+  const usingIds = previewMode ? previewFavIds : favIds;
+  if(!usingIds || usingIds.length===0){
+    favListEl.innerHTML = `<div class="tiny muted">${previewMode ? '共有されたお気に入りはありません' : 'お気に入りに入れたイベントはここに表示されます。'}</div>`;
     return;
   }
-  const favEvents = events.filter(e=>favIds.includes(e.id));
+  const favEvents = events.filter(e=>usingIds.includes(e.id));
   favEvents.forEach(ev=>{
     const div = document.createElement('div');
     div.className='fav-item';
     div.innerHTML = `
-      <img class="thumb" src="${ev.image}" alt="${ev.title}">
+      <img class="thumb" src="${ev.image||'https://picsum.photos/seed/placeholder/400/240'}" alt="${ev.title}">
       <div class="meta">
         <h3>${ev.title}</h3>
-        <div class="sub">${ev.start} - ${ev.end} ・ ${ev.place} ・ <span class="pill">${ev.category}</span></div>
+        <div class="sub">${ev.start} - ${ev.end} ・ ${ev.place} ・ <span class="pill">${ev.category||'その他'}</span></div>
         <div class="actions">
           <button class="openBtn">詳細</button>
-          <button class="btnFavToggle">${isFav(ev.id)?'お気に入り済':'お気に入り'}</button>
-          <label style="display:inline-flex;align-items:center;gap:6px"><input type="checkbox" class="doneChk" ${isDone(ev.id)?'checked':''}> 行った</label>
+          ${ previewMode ? '' : `<button class="btnFavToggle">${isFav(ev.id)?'お気に入り済':'お気に入り'}</button>` }
+          <label style="display:inline-flex;align-items:center;gap:6px"><input type="checkbox" class="doneChk" ${isDone(ev.id)?'checked':''} ${previewMode ? 'disabled' : ''}> 行った</label>
           <button class="memoBtn">メモ</button>
         </div>
         <div style="margin-top:8px"><div class="small muted">メモ:</div><div id="memo_${ev.id}" class="small" style="min-height:18px">${getMemo(ev.id)||'<span class=muted>（メモなし）</span>'}</div></div>
@@ -364,14 +407,16 @@ function renderFavList(){
     favListEl.appendChild(div);
 
     div.querySelector('.openBtn').addEventListener('click',()=> openSheet(ev));
-    div.querySelector('.btnFavToggle').addEventListener('click',()=>{
-      toggleFav(ev.id);
-      renderAll();
-    });
-    div.querySelector('.doneChk').addEventListener('change',(e)=>{
-      toggleDone(ev.id,e.target.checked);
-      renderAll();
-    });
+    if(!previewMode){
+      div.querySelector('.btnFavToggle').addEventListener('click',()=>{
+        toggleFav(ev.id);
+        renderAll();
+      });
+      div.querySelector('.doneChk').addEventListener('change',(e)=>{
+        toggleDone(ev.id,e.target.checked);
+        renderAll();
+      });
+    }
     div.querySelector('.memoBtn').addEventListener('click',()=>{
       openMemoPrompt(ev);
     });
@@ -380,8 +425,9 @@ function renderFavList(){
 
 function renderMiniTimeline(){
   timelineEl.innerHTML='';
-  if(favIds.length===0){ timelineEl.innerHTML='<div class="muted small">お気に入りがありません</div>'; overlapAlertEl.style.display='none'; return; }
-  const favEvents = events.filter(e=>favIds.includes(e.id)).sort((a,b)=> timeToMinutes(a.start)-timeToMinutes(b.start));
+  const usingIds = previewMode ? previewFavIds : favIds;
+  if(!usingIds || usingIds.length===0){ timelineEl.innerHTML='<div class="muted small">お気に入りがありません</div>'; overlapAlertEl.style.display='none'; return; }
+  const favEvents = events.filter(e=>usingIds.includes(e.id)).sort((a,b)=> timeToMinutes(a.start)-timeToMinutes(b.start));
   favEvents.forEach(ev=>{
     const row = document.createElement('div');
     row.className='tl-row';
@@ -401,7 +447,6 @@ function renderMiniTimeline(){
 }
 
 function findOverlaps(list){
-  // list is sorted by start time
   const out = [];
   for(let i=0;i<list.length;i++){
     for(let j=i+1;j<list.length;j++){
@@ -425,16 +470,16 @@ function openSheet(ev){
   const doneChk = isDone(ev.id) ? 'checked' : '';
   $('sheetContent').innerHTML = `
     <div style="display:flex;gap:12px">
-      <img src="${ev.image}" style="width:160px;height:96px;object-fit:cover;border-radius:8px">
+      <img src="${ev.image||'https://picsum.photos/seed/placeholder/400/240'}" style="width:160px;height:96px;object-fit:cover;border-radius:8px">
       <div style="flex:1">
         <h2 style="margin:0 0 6px 0">${ev.title}</h2>
-        <div class="small muted">${ev.start} - ${ev.end} ・ ${ev.place} ・ <span class="pill">${ev.category}</span></div>
-        <p style="margin-top:8px">${ev.description}</p>
+        <div class="small muted">${ev.start} - ${ev.end} ・ ${ev.place} ・ <span class="pill">${ev.category||'その他'}</span></div>
+        <p style="margin-top:8px">${ev.description||''}</p>
         <div style="margin-top:6px" class="small muted">詳細:</div>
         <div class="tiny" style="margin-top:6px">${details}</div>
         <div style="margin-top:10px" class="row">
-          <button id="sheetFavBtn">${favBtnText}</button>
-          <label style="display:inline-flex;align-items:center;gap:6px"><input id="sheetDone" type="checkbox" ${doneChk}> 行った</label>
+          ${ previewMode ? '' : `<button id="sheetFavBtn">${favBtnText}</button>` }
+          <label style="display:inline-flex;align-items:center;gap:6px"><input id="sheetDone" type="checkbox" ${doneChk} ${previewMode ? 'disabled' : ''}> 行った</label>
           <button id="sheetShare">共有</button>
         </div>
         <div style="margin-top:8px">
@@ -450,15 +495,17 @@ function openSheet(ev){
   `;
   $('sheet').classList.add('open'); $('sheet').setAttribute('aria-hidden','false');
 
-  $('sheetFavBtn').addEventListener('click',()=>{
-    toggleFav(ev.id);
-    renderAll();
-    openSheet(ev); // refresh sheet
-  });
-  $('sheetDone').addEventListener('change',(e)=>{
-    toggleDone(ev.id,e.target.checked);
-    renderAll();
-  });
+  if(!previewMode){
+    $('sheetFavBtn').addEventListener('click',()=>{
+      toggleFav(ev.id);
+      renderAll();
+      openSheet(ev); // refresh sheet
+    });
+    $('sheetDone').addEventListener('change',(e)=>{
+      toggleDone(ev.id,e.target.checked);
+      renderAll();
+    });
+  }
   $('saveMemoBtn').addEventListener('click',()=>{
     const txt = $('sheetMemo').value.trim();
     saveMemo(ev.id,txt);
@@ -473,8 +520,6 @@ function openSheet(ev){
     copyTextToClipboard(url);
     alert('共有リンクをコピーしました');
   });
-
-  // auto-open logic for links with ev param could be added, but kept simple here
 }
 
 $('sheet').addEventListener('click', e => { if(e.target === $('sheet')){ $('sheet').classList.remove('open'); $('sheet').setAttribute('aria-hidden','true'); } });
@@ -511,17 +556,29 @@ function openMemoPrompt(ev){
 // sharing
 function genShareUrl(){
   const base = location.origin + location.pathname;
-  const fav = favIds.join(',');
-  const done = doneIds.join(',');
-  const auto = $('autoOpenShared') ? '1' : '0';
+  const fav = (previewMode ? previewFavIds.join(',') : favIds.join(','));
+  const done = (previewMode ? previewDoneIds.join(',') : doneIds.join(','));
+  const name = localStorage.getItem('my_name') || '';
   const parts = [];
   if(fav) parts.push('fav='+encodeURIComponent(fav));
   if(done) parts.push('done='+encodeURIComponent(done));
-  parts.push('auto=' + (auto==='1' ? '1' : '0'));
+  if(name) parts.push('sharer='+encodeURIComponent(name));
+  parts.push('auto=' + (autoOpenShared ? '1' : '0'));
   return base + (parts.length ? ('?'+parts.join('&')) : '');
 }
 function copyTextToClipboard(text){
-  navigator.clipboard && navigator.clipboard.writeText ? navigator.clipboard.writeText(text) : (function(){ const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove(); })();
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).catch(()=>{ fallbackCopy(text); });
+  } else {
+    fallbackCopy(text);
+  }
+  function fallbackCopy(t){
+    const ta=document.createElement('textarea');
+    ta.value=t; ta.style.position='fixed'; ta.style.left='-9999px';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+  }
 }
 
 // share controls
@@ -553,7 +610,8 @@ function buildShareText(){
   const favEvents = events.filter(e=>favIds.includes(e.id));
   const doneEvents = events.filter(e=>doneIds.includes(e.id));
   const lines = [];
-  lines.push('私のレトロこみちポイント: ' + pts + 'pt');
+  const name = localStorage.getItem('my_name') || '';
+  lines.push((name ? name + ' さんの ' : '私の ') + 'レトロこみちポイント: ' + pts + 'pt');
   lines.push('');
   if(doneEvents.length){
     lines.push('行ったイベント:');
@@ -651,6 +709,8 @@ $('btnResetAll').addEventListener('click', ()=>{
   if(!confirm('ローカルデータ（お気に入り・行った・メモ 等）をすべて消去しますか？戻せません。')) return;
   localStorage.clear();
   favIds = []; doneIds = [];
+  myName = '';
+  updateNameUI();
   renderAll();
 });
 $('btnClearFavs').addEventListener('click', ()=>{
@@ -667,11 +727,149 @@ $('btnClearMemo').addEventListener('click', ()=>{
 if(!Array.isArray(favIds)) favIds = [];
 if(!Array.isArray(doneIds)) doneIds = [];
 
-// UI: open share url on load if params requested (auto open)
-window.addEventListener('DOMContentLoaded', ()=>{
-  // if URL has ev param? (not used here)
-  renderAll();
+// save name
+saveNameBtn.addEventListener('click', ()=>{
+  const v = myNameInput.value.trim();
+  myName = v;
+  if(myName) localStorage.setItem('my_name', myName);
+  else localStorage.removeItem('my_name');
+  updateNameUI();
+  shareUrlEl.value = genShareUrl();
+  alert('表示名を保存しました');
 });
+clearNameBtn.addEventListener('click', ()=>{
+  if(!confirm('表示名をクリアしますか？')) return;
+  myName = '';
+  localStorage.removeItem('my_name');
+  updateNameUI();
+  shareUrlEl.value = genShareUrl();
+});
+
+// auto open shared persist
+$('autoOpenShared').checked = autoOpenShared;
+$('autoOpenShared').addEventListener('change', (e)=> {
+  autoOpenShared = !!e.target.checked;
+  localStorage.setItem('auto_open_shared', autoOpenShared ? '1' : '0');
+});
+
+// when URL loads with fav/done and sharer, show accept dialog
+function showShareAcceptDialog(sharer, favList, doneList){
+  const modalHtml = `
+    <div class="modal-backdrop">
+      <div class="modal">
+        <h3>${sharer} さんから共有リンクを受け取りました</h3>
+        <p class="small muted">以下のお気に入りを一時的にプレビューできます。あなたのローカルデータは変更されません。プレビューを受け入れると共有者のお気に入り一覧を確認できます。必要なら後で自分のお気に入りに取り込みできます。</p>
+        <div style="margin-top:8px;max-height:220px;overflow:auto;border:1px solid #f0f4f8;padding:8px;border-radius:8px;">
+          ${ (favList.length ? favList.map(id=>{
+              const ev = events.find(e=>e.id===id);
+              return `<div style="margin-bottom:6px"><strong>${ev?ev.title:'(不明なイベント)'} </strong><div class="small muted">${ev?ev.start+' ・ '+ev.place:''}</div></div>`;
+            }).join('') : '<div class="muted small">共有されたお気に入りはありません</div>') }
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button id="acceptSharedBtn" class="btn-primary">プレビューを開く</button>
+          <button id="importSharedBtn">自分のお気に入りに取り込む</button>
+          <button id="declineSharedBtn" style="margin-left:auto">閉じる</button>
+        </div>
+      </div>
+    </div>
+  `;
+  modalEl.innerHTML = modalHtml;
+  modalEl.style.display = 'block';
+
+  $('acceptSharedBtn').addEventListener('click', ()=>{
+    // set preview mode and render
+    previewMode = true;
+    previewFavIds = favList.slice();
+    previewDoneIds = doneList.slice();
+    previewSharer = sharer;
+    modalEl.style.display = 'none';
+    renderAll();
+    showPreviewBanner();
+  });
+  $('importSharedBtn').addEventListener('click', ()=>{
+    // merge into favIds and doneIds
+    const mergedFav = Array.from(new Set([...(favIds||[]), ...favList]));
+    const mergedDone = Array.from(new Set([...(doneIds||[]), ...doneList]));
+    favIds = mergedFav; doneIds = mergedDone;
+    setLocalArr('fav_ids',favIds);
+    setLocalArr('done_ids',doneIds);
+    modalEl.style.display = 'none';
+    previewMode = false;
+    previewFavIds = []; previewDoneIds = [];
+    alert('共有されたお気に入りをあなたのマイページに取り込みました');
+    renderAll();
+  });
+  $('declineSharedBtn').addEventListener('click', ()=>{
+    modalEl.style.display = 'none';
+  });
+}
+
+function showPreviewBanner(){
+  // show a temporary banner area above favList to indicate preview mode
+  const parentCard = favListEl.parentElement;
+  let banner = parentCard.querySelector('.preview-banner');
+  if(!banner){
+    banner = document.createElement('div');
+    banner.className = 'preview-banner';
+    parentCard.insertBefore(banner, favListEl);
+  }
+  banner.innerHTML = `<strong>プレビュー中：</strong> ${previewSharer || '共有者'} さんの共有お気に入り。<span class="small muted">（あなたのローカルは変更されていません）</span>
+    <div style="margin-top:8px;display:flex;gap:8px">
+      <button id="importFromPreview" class="btn-primary">自分のお気に入りに取り込む</button>
+      <button id="exitPreview" style="margin-left:auto">プレビューを閉じる</button>
+    </div>`;
+  parentCard.scrollIntoView({behavior:'smooth'});
+
+  $('importFromPreview').addEventListener('click', ()=>{
+    const merged = Array.from(new Set([...(favIds||[]), ...previewFavIds]));
+    favIds = merged;
+    setLocalArr('fav_ids',favIds);
+    previewMode = false;
+    previewFavIds = [];
+    alert('プレビューのお気に入りをあなたのマイページに取り込みました');
+    renderAll();
+  });
+  $('exitPreview').addEventListener('click', ()=>{
+    previewMode = false;
+    previewFavIds = [];
+    if(banner) banner.remove();
+    renderAll();
+  });
+}
+
+// parse params and decide whether to show modal automatically
+(function(){
+  const params = new URLSearchParams(location.search);
+  const favParam = params.get('fav');
+  const doneParam = params.get('done');
+  const sharer = params.get('sharer');
+  const auto = params.get('auto');
+  if(auto==='0') autoOpenShared = false;
+  $('autoOpenShared').checked = autoOpenShared;
+
+  if(sharer && (favParam || doneParam)){
+    const favList = favParam ? favParam.split(',').map(s=>Number(s)).filter(Boolean) : [];
+    const doneList = doneParam ? doneParam.split(',').map(s=>Number(s)).filter(Boolean) : [];
+    if(autoOpenShared){
+      // show modal automatically
+      setTimeout(()=> showShareAcceptDialog(sharer, favList, doneList), 300);
+    } else {
+      // show a small notice bar and allow user to open the preview manually by clicking a compact button
+      // For simplicity, show modal on load anyway but do not auto-open sheet for individual evs
+      setTimeout(()=> {
+        // still show modal so user can accept
+        showShareAcceptDialog(sharer, favList, doneList);
+      }, 300);
+    }
+  } else {
+    // if URL has ev param and autoOpenShared true, open that event sheet (existing behavior)
+    const evId = Number(params.get('ev'));
+    if(evId && autoOpenShared){
+      const ev = events.find(x=>x.id===evId);
+      if(ev) setTimeout(()=> openSheet(ev), 300);
+    }
+  }
+})();
 
 // utils
 function genListFromIds(ids){ return ids.map(id=> events.find(e=>e.id===id)).filter(Boolean); }
@@ -687,21 +885,15 @@ function computeCategoryDistribution(){
 // build share text and set url initially
 shareUrlEl.value = genShareUrl();
 
-// auto open shared option control
-$('autoOpenShared').addEventListener('change', (e)=> {
-  // just store the preference visually - doesn't affect URL here
+// UI init
+window.addEventListener('DOMContentLoaded', ()=>{
+  renderAll();
 });
 
-// when URL loads with fav/done, if autoOpenShared true and a single event exist, open it
-(function(){
-  const params = new URLSearchParams(location.search);
-  const evId = Number(params.get('ev'));
-  const auto = params.get('auto');
-  if(evId && auto !== '0'){
-    const ev = events.find(x=>x.id===evId);
-    if(ev) setTimeout(()=> openSheet(ev), 300);
-  }
-})();
+// expose for debug
+window._mp = {
+  events, favIds, doneIds
+};
 
 </script>
 </body>
