@@ -127,6 +127,20 @@ nav a:hover img {
 .modal{background:white;border-radius:12px;padding:18px;max-width:420px;width:92%;box-shadow:0 8px 36px rgba(0,0,0,0.2)}
 .preview-banner{background:linear-gradient(90deg,#fff7ea,#fff3d8);padding:8px;border-radius:8px;border:1px solid #ffe9bf;margin-bottom:10px}
 
+/* confetti */
+#confetti { position: fixed; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index:1500; display:none; }
+.confetti-piece {
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  opacity: 0.95;
+  will-change: transform, opacity;
+  border-radius:2px;
+}
+@keyframes confetti-fall {
+  0% { transform: translate3d(0,-10vh,0) rotate(0deg); opacity:1; }
+  100% { transform: translate3d(0,110vh,0) rotate(360deg); opacity:0; }
+}
 </style>
 </head>
 <body>
@@ -286,6 +300,9 @@ nav a:hover img {
 <!-- modal for share accept -->
 <div id="shareAcceptModal" style="display:none"></div>
 
+<!-- confetti container -->
+<div id="confetti" aria-hidden="true"></div>
+
 <script>
 /*
   mypage.html (改良版)
@@ -295,9 +312,12 @@ nav a:hover img {
     memo_<id>: "text"
     my_name: "表示名"
     auto_open_shared: "1" or "0"
+    confetti_50_shown: "1" when confetti already shown for 50 points
   - 1 event = 10 points
+  - favoriting = 5 points (per favorite)
   - goal = 200pt (changeable)
-  - share URL format: current_path?fav=101,102&done=101,205&sharer=%E3%81%86%E3%81%BE%E3%82%8B
+  - confetti at 50pt (once until points drop below 50)
+  - share URL format: current_path?fav=101,102&done=101,205&sharer=名前
 */
 
 let events = [
@@ -310,6 +330,7 @@ let events = [
 
 // config
 const POINT_PER_EVENT = 10;
+const POINT_PER_FAV = 5;
 const POINT_GOAL = 200;
 
 const $ = id => document.getElementById(id);
@@ -331,6 +352,7 @@ const myNameInput = $('myNameInput');
 const saveNameBtn = $('saveNameBtn');
 const clearNameBtn = $('clearNameBtn');
 const currentNameEl = $('currentName');
+const confettiEl = $('confetti');
 
 function getLocalArr(key){ try{ return JSON.parse(localStorage.getItem(key)||'[]'); }catch(e){ return []; } }
 function setLocalArr(key,arr){ localStorage.setItem(key, JSON.stringify(arr)); }
@@ -357,18 +379,16 @@ function updateNameUI(){
 }
 updateNameUI();
 
-// if query contains fav/done, optionally apply (we won't auto-import; only prepare)
-function parseQueryParams(){
-  const params = new URLSearchParams(location.search);
-  return {
-    favParam: params.get('fav'),
-    doneParam: params.get('done'),
-    evParam: params.get('ev'),
-    sharerParam: params.get('sharer'),
-    autoParam: params.get('auto'),
-  };
+// helper: compute points (includes favorite bonus)
+function computePoints(){ 
+  // Points = done events * POINT_PER_EVENT + current favorites * POINT_PER_FAV
+  const favBonus = Array.isArray(favIds) ? favIds.length * POINT_PER_FAV : 0;
+  return (Array.isArray(doneIds) ? doneIds.length * POINT_PER_EVENT : 0) + favBonus;
 }
 
+let prevPoints = computePoints();
+
+// UI rendering
 function renderAll(){
   renderFavList();
   renderMiniTimeline();
@@ -527,8 +547,13 @@ $('sheet').addEventListener('click', e => { if(e.target === $('sheet')){ $('shee
 // favorites toggle
 function isFav(id){ return favIds.includes(id); }
 function toggleFav(id){
-  if(isFav(id)){ favIds = favIds.filter(x=>x!==id); } else { favIds.push(id); }
+  if(isFav(id)){
+    favIds = favIds.filter(x=>x!==id);
+  } else {
+    favIds.push(id);
+  }
   setLocalArr('fav_ids',favIds);
+  renderAll();
 }
 function isDone(id){ return doneIds.includes(id); }
 function toggleDone(id,checked){
@@ -627,9 +652,7 @@ function buildShareText(){
   return lines.join('\n');
 }
 
-// points & chart
-function computePoints(){ return doneIds.length * POINT_PER_EVENT; }
-
+// points & chart + confetti handling
 function renderPoints(){
   const pts = computePoints();
   pointSummaryEl.textContent = `ポイント: ${pts}pt`;
@@ -679,6 +702,54 @@ function renderPoints(){
   ctx.fillText(Math.round(ratio*100) + '%', cx, cy-6);
   ctx.font = '600 11px system-ui';
   ctx.fillText(pts + 'pt', cx, cy+14);
+
+  // confetti trigger for 50 points
+  try {
+    const shown = localStorage.getItem('confetti_50_shown') === '1';
+    if(pts >= 50 && !shown){
+      launchConfetti();
+      localStorage.setItem('confetti_50_shown','1');
+    } else if(pts < 50 && shown){
+      // allow re-trigger next time user reaches 50
+      localStorage.removeItem('confetti_50_shown');
+    }
+  } catch(e){ console.warn(e); }
+
+  prevPoints = pts;
+}
+
+// confetti implementation (vanilla)
+function launchConfetti(){
+  if(!confettiEl) return;
+  confettiEl.style.display = 'block';
+  const colors = ['#ff6b6b','#ffd166','#4aa3d9','#7ad7b8','#9b72d1','#ff9aa2'];
+  const pieces = 100;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  for(let i=0;i<pieces;i++){
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    const size = Math.floor(6 + Math.random()*10);
+    el.style.width = size + 'px';
+    el.style.height = Math.floor(size*1.4) + 'px';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    // start position
+    el.style.left = Math.random()*100 + '%';
+    el.style.top = (-Math.random()*10) + 'vh';
+    // random rotation
+    el.style.transform = `rotate(${Math.floor(Math.random()*360)}deg)`;
+    // animation
+    const delay = Math.random() * 0.6;
+    const duration = 2.5 + Math.random() * 1.5;
+    el.style.animation = `confetti-fall ${duration}s ${delay}s cubic-bezier(.2,.6,.2,1) forwards`;
+    // horizontal drift via transform translateX animated by setting CSS variable and using setTimeout for tiny shifts
+    confettiEl.appendChild(el);
+  }
+  // remove after 4.5s
+  setTimeout(()=> {
+    confettiEl.innerHTML = '';
+    confettiEl.style.display = 'none';
+  }, 4500);
 }
 
 // badges (simple flat icons)
@@ -854,12 +925,8 @@ function showPreviewBanner(){
       // show modal automatically
       setTimeout(()=> showShareAcceptDialog(sharer, favList, doneList), 300);
     } else {
-      // show a small notice bar and allow user to open the preview manually by clicking a compact button
-      // For simplicity, show modal on load anyway but do not auto-open sheet for individual evs
-      setTimeout(()=> {
-        // still show modal so user can accept
-        showShareAcceptDialog(sharer, favList, doneList);
-      }, 300);
+      // still show modal but user may opt out
+      setTimeout(()=> { showShareAcceptDialog(sharer, favList, doneList); }, 300);
     }
   } else {
     // if URL has ev param and autoOpenShared true, open that event sheet (existing behavior)
