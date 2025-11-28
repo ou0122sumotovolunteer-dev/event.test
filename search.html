@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>企画検索 | レトロこみちイベント</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  font-family:"Yu Gothic",sans-serif;
+  background:#f7f5ef;
+  margin:0; padding:0; color:#4a3d2f;
+}
+
+/* header */
+header{
+  padding:28px 20px 15px;
+  background:white;
+  border-bottom:1px solid #e0d9c8;
+}
+header h1{
+  margin:0;
+  font-size:2.1rem;
+}
+header p{
+  opacity:.6;
+  margin:4px 0 0;
+  font-size:.9rem;
+}
+
+/* type legends */
+.type-legends{
+  max-width:1100px;
+  margin:20px auto 0;
+  padding:6px 18px;
+  font-size:.9rem;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+.type-mark{
+  padding:4px 10px;
+  border-radius:9px;
+  color:white;
+  font-weight:600;
+  font-size:.8rem;
+}
+.event-color{ background:#c36dff; }
+.exhibitor-color{ background:#5b8bff; }
+.project-color{ background:#8bcf4f; }
+
+/* filter area */
+.filter-card{
+  background:white;
+  width:90%;
+  max-width:1100px;
+  margin:15px auto 25px;
+  padding:22px 26px;
+  border-radius:16px;
+  box-shadow:0 4px 14px rgba(0,0,0,.06);
+}
+.filter-row{
+  margin-bottom:16px; display:flex; flex-direction:column; gap:6px;
+}
+.filter-row label{
+  opacity:.7; font-size:.88rem;
+}
+.filter-row input,.filter-row select{
+  padding:14px;
+  border-radius:10px;
+  border:1px solid #d2c9b6;
+  background:#fbfbf9;
+  font-size:1rem;
+}
+
+/* favorite only */
+.favorite-toggle{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:6px 0;
+}
+.favorite-toggle input{
+  width:18px; height:18px;
+}
+
+.search-btn{
+  width:100%;
+  margin-top:12px;
+  padding:15px;
+  background:black;
+  color:white;
+  font-size:1.1rem;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+}
+.reset-btn{
+  width:100%;
+  margin-top:10px;
+  padding:13px;
+  font-size:1rem;
+  background:white;
+  border:1px solid #c7bca8;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+/* results header */
+.results-header{
+  width:90%; max-width:1100px;
+  margin:10px auto;
+  font-size:1rem;
+  color:#6c5e4f;
+}
+
+/* event cards */
+.event-container{
+  width:90%; max-width:1100px;
+  margin:0 auto 40px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
+@media(max-width:1050px){ .event-container{ grid-template-columns:repeat(2,1fr);} }
+@media(max-width:650px){ .event-container{ grid-template-columns:1fr;} }
+
+.event-card{
+  background:white;
+  border-radius:16px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+  overflow:hidden;
+  cursor:pointer;
+  position:relative;
+  transition:.25s;
+}
+.event-card:hover{ transform:scale(1.03); }
+.event-card img{
+  width:100%;
+  height:220px;
+  object-fit:cover; /* 正方形を保つ */
+  aspect-ratio:1/1;
+}
+.event-info{ padding:13px; }
+.event-title{ font-size:1.13rem; margin-bottom:6px; }
+.event-place{ opacity:.7; font-size:.9rem; margin:0; }
+
+.event-label{
+  position:absolute;
+  top:12px; left:12px;
+  padding:4px 10px;
+  border-radius:9px;
+  font-size:.75rem;
+  font-weight:600; color:white;
+}
+.fav-icon{
+  position:absolute;
+  top:12px; right:12px;
+  padding:6px 9px;
+  font-size:22px;
+  background:white;
+  border-radius:40px;
+  box-shadow:0 2px 6px rgba(0,0,0,.18);
+}
+
+/* popup */
+.popup-overlay{
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.45);
+  justify-content:center; align-items:center;
+  z-index:500;
+}
+.popup-card{
+  width:90%; max-width:480px;
+  background:white;
+  border-radius:16px;
+  padding:18px;
+  animation:fadeIn .22s ease;
+  position:relative;
+}
+@keyframes fadeIn{
+  from{opacity:0; transform:scale(.93);}
+  to{opacity:1; transform:scale(1);}
+}
+.popup-close{
+  position:absolute; top:10px; right:14px;
+  font-size:26px; cursor:pointer;
+}
+.popup-img{
+  width:100%; height:250px;
+  object-fit:cover;
+  border-radius:12px;
+  margin-bottom:10px;
+}
+.popup-title{ font-size:1.3rem; margin:5px 0; }
+.popup-time,.popup-place{ margin:3px 0; opacity:.7; }
+.popup-desc{ margin-top:8px; line-height:1.55; white-space:pre-line; }
+
+.favorite-btn,.detail-btn{
+  width:100%; margin-top:9px; padding:13px;
+  font-size:1rem; border:none; border-radius:10px;
+  cursor:pointer;
+}
+.favorite-btn{ background:#ffe2e2; }
+.detail-btn{ background:#efe3bb; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>企画検索</h1>
+  <p>トップ ＞ 企画検索</p>
+</header>
+
+<div class="type-legends">
+  <span class="type-mark event-color">EVENT：イベント</span>
+  <span class="type-mark exhibitor-color">EXHIBITOR：出展者</span>
+  <span class="type-mark project-color">PROJECT：企画</span>
+</div>
+
+<section class="filter-card">
+  <div class="filter-row">
+    <label>キーワードで探す</label>
+    <input id="keywordInput" type="text" placeholder="キーワードを入力">
+  </div>
+
+  <div class="filter-row">
+    <label>カテゴリから探す</label>
+    <select id="categorySelect"><option value="">カテゴリを選択</option></select>
+  </div>
+
+  <div class="filter-row">
+    <label>場所から探す</label>
+    <select id="placeSelect"><option value="">会場を選択</option></select>
+  </div>
+
+  <label class="favorite-toggle">
+    <input type="checkbox" id="favOnlyCheck">
+    <span>お気に入りのみ表示</span>
+  </label>
+
+  <button id="searchBtn" class="search-btn">この条件で検索</button>
+  <button id="resetBtn" class="reset-btn">検索条件をリセット</button>
+</section>
+
+<section class="results-header">
+  検索結果： <span id="resultCount">0</span> 件
+</section>
+
+<section id="eventContainer" class="event-container"></section>
+
+<!-- popup -->
+<div id="popupOverlay" class="popup-overlay">
+  <div class="popup-card">
+    <span id="popupClose" class="popup-close">×</span>
+    <img id="popupImg" class="popup-img">
+    <span id="popupLabel" class="event-label"></span>
+    <h2 id="popupTitle" class="popup-title"></h2>
+    <p id="popupTime" class="popup-time"></p>
+    <p id="popupPlace" class="popup-place"></p>
+    <p id="popupDesc" class="popup-desc"></p>
+    <button id="favoriteBtn" class="favorite-btn"></button>
+    <button id="detailBtn" class="detail-btn">詳細を見る</button>
+  </div>
+</div>
+
+<script>
+/* ---------- データ（必要に応じて増やせます） ---------- */
+const events = [
+  {
+    id:101,
+    title:"オープニングトーク",
+    start:"10:00",
+    end:"10:30",
+    place:"メインホール",
+    description:"イベントのはじまりの挨拶です。",
+    details:"出演者: AAA\n持ち物: 特になし",
+    image:"sample1.png",           // ←カード画像
+    imageIcon:"img/icons/event.png",// ←アイコン画像（任意）
+    type:"event",
+    category:"舞台,パフォーマンス",
+  },
+  {
+    id:102,
+    title:"庭園で楽しむお茶会",
+    start:"11:00",
+    end:"12:00",
+    place:"日本庭園",
+    description:"庭園を眺めながら楽しむ特別なお茶会。",
+    details:"定員あり・整理券配布",
+    image:"sample2.png",
+    imageIcon:"img/icons/project.png",
+    type:"project",
+    category:"体験,和文化",
+  },
+  {
+    id:103,
+    title:"手作り雑貨ブース",
+    start:"終日",
+    end:"",
+    place:"レトロこみち通り",
+    description:"作家によるハンドメイド作品の展示販売。",
+    details:"限定アイテムあり",
+    image:"sample3.png",
+    imageIcon:"img/icons/exhibitor.png",
+    type:"exhibitor",
+    category:"雑貨,販売",
+  },
+  {
+    id:104,
+    title:"手作り雑貨ブース",
+    start:"終日",
+    end:"",
+    place:"レトロこみち通り",
+    description:"作家によるハンドメイド作品の展示販売。",
+    details:"限定アイテムあり",
+    image:"sample3.png",
+    imageIcon:"img/icons/exhibitor.png",
+    type:"exhibitor",
+    category:"雑貨,販売",
+  },
+  {
+    "id": 105,
+    "title": "conomi",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "布小物の販売",
+    "details": "",
+    "image": "sample105.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "物販・ワークショップ"
+  },
+  {
+    "id": 106,
+    "title": "トリカイネコ",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "パン、焼き菓子、ジャム、飲み物",
+    "details": "",
+    "image": "sample106.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "飲食（キッチンカー除く）"
+  },
+  {
+    "id": 107,
+    "title": "子ども工房",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "おえかき",
+    "details": "",
+    "image": "sample107.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "物販・ワークショップ"
+  },
+  {
+    "id": 108,
+    "title": "モクモク工房あわじ島",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "ヒノキのペンダントや流木の販売",
+    "details": "",
+    "image": "sample108.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "物販・ワークショップ"
+  },
+  {
+    "id": 109,
+    "title": "かぷとゆめ",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "自家焙煎コーヒー　ソフトドリンク　無水カレー　カレーパン　ナン",
+    "details": "",
+    "image": "sample109.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "飲食（キッチンカー）"
+  },
+  {
+    "id": 110,
+    "title": "AC_garden",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "多肉植物、モルタル鉢、寄せ植え",
+    "details": "",
+    "image": "sample110.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "物販・ワークショップ"
+  },
+  {
+    "id": 111,
+    "title": "AWAJI made",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "犬猫のおやつの販売",
+    "details": "",
+    "image": "sample111.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "物販・ワークショップ"
+  },
+  {
+    "id": 112,
+    "title": "9857bagel",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "ベーグル販売",
+    "details": "",
+    "image": "sample112.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "飲食（キッチンカー除く）"
+  },
+  {
+    "id": 113,
+    "title": "ermine",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "クレープ、ガレットの販売",
+    "details": "",
+    "image": "sample113.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "飲食（キッチンカー）"
+  },
+  {
+    "id": 114,
+    "title": "Dear コロン",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "焼き菓子",
+    "details": "",
+    "image": "sample114.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "飲食（キッチンカー除く）"
+  },
+  {
+    "id": 115,
+    "title": "bizus_k2",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "アクセサリー、アロマキャンドル",
+    "details": "",
+    "image": "sample115.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "物販・ワークショップ"
+  },
+  {
+    "id": 116,
+    "title": "四柱推命占い　知慧",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "占い",
+    "details": "",
+    "image": "sample116.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "物販・ワークショップ"
+  },
+  {
+    "id": 117,
+    "title": "Book＆Coffee coyomi",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "コーヒー、焼菓子",
+    "details": "",
+    "image": "sample117.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "飲食（キッチンカー除く）"
+  },
+  {
+    "id": 118,
+    "title": "どんぐりさん",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "カラフル綿菓子",
+    "details": "",
+    "image": "sample118.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "飲食（キッチンカー除く）"
+  },
+  {
+    "id": 119,
+    "title": "impact kitchen",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "とうふスイーツ",
+    "details": "",
+    "image": "sample119.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "飲食（キッチンカー）"
+  },
+  {
+    "id": 120,
+    "title": "ohana",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "布小物、ベビーキッズ服",
+    "details": "",
+    "image": "sample120.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "物販・ワークショップ"
+  },
+  {
+    "id": 121,
+    "title": "APEX",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "犬猫小物、デコリールキーやキーホルダー作り",
+    "details": "",
+    "image": "sample121.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "物販・ワークショップ"
+  },
+  {
+    "id": 122,
+    "title": "Sora to Asa",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "ドライフラワーを使った作品、リース、スワッグ等",
+    "details": "",
+    "image": "sample122.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "物販・ワークショップ"
+  },
+  {
+    "id": 123,
+    "title": "わらび餅の川西",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "わらび餅、しがらき餅",
+    "details": "",
+    "image": "sample123.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "飲食（キッチンカー除く）"
+  },
+  {
+    "id": 124,
+    "title": "ＮＰＯ法人うず潮を世界遺産にする淡路島民の会",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "大渦コマ回し",
+    "details": "",
+    "image": "sample124.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "物販・ワークショップ"
+  },
+  {
+    "id": 125,
+    "title": "イモですが何か？",
+    "start": "終日",
+    "end": "",
+    "place": "レトロこみち通り",
+    "description": "イモスイーツ、じゃがバターの販売",
+    "details": "",
+    "image": "sample125.png",
+    "imageIcon": "img/icons/exhibitor.png",
+    "type": "exhibitor",
+    "category": "飲食（キッチンカー）"
+  }
+];
+
+/* favorite localStorage */
+let favList = JSON.parse(localStorage.getItem("favEvents") || "[]");
+
+/* DOM */
+const container = document.getElementById("eventContainer");
+const keywordInput = document.getElementById("keywordInput");
+const categorySelect = document.getElementById("categorySelect");
+const placeSelect = document.getElementById("placeSelect");
+const favOnlyCheck = document.getElementById("favOnlyCheck");
+const resultCount = document.getElementById("resultCount");
+
+/* ---------- セレクト生成 ---------- */
+const categories = new Set(), places = new Set();
+events.forEach(e=>{
+  e.category.split(",").forEach(c=>categories.add(c.trim()));
+  places.add(e.place.trim());
+});
+categories.forEach(c => categorySelect.innerHTML += `<option value="${c}">${c}</option>`);
+places.forEach(p => placeSelect.innerHTML += `<option value="${p}">${p}</option>`);
+
+/* ---------- 表示 ---------- */
+function render(list){
+  container.innerHTML = "";
+  list.forEach(e=>{
+    const isFav = favList.includes(e.id);
+    const labelClass = e.type==="event" ? "event-color" :
+                       e.type==="exhibitor" ? "exhibitor-color" : "project-color";
+
+    container.innerHTML += `
+      <div class="event-card" onclick="openPopup(${e.id})">
+        <img src="${e.image}">
+        <span class="event-label ${labelClass}">${e.type.toUpperCase()}</span>
+        <span class="fav-icon">${isFav ? "❤️":"♡"}</span>
+        <div class="event-info">
+          <h3 class="event-title">${e.title}</h3>
+          <p class="event-place">${e.place} / ${e.start}${e.end? "〜"+e.end:""}</p>
+        </div>
+      </div>`;
+  });
+  resultCount.textContent = list.length;
+}
+
+/* ---------- 検索 ---------- */
+function search(){
+  let list = [...events];
+  const w = keywordInput.value.trim();
+  const c = categorySelect.value;
+  const p = placeSelect.value;
+  list = list.filter(e =>
+    (!w || e.title.includes(w) || e.description.includes(w)) &&
+    (!c || e.category.includes(c)) &&
+    (!p || e.place===p)
+  );
+  if(favOnlyCheck.checked) list = list.filter(e => favList.includes(e.id));
+  render(list);
+}
+document.getElementById("searchBtn").onclick = search;
+document.getElementById("resetBtn").onclick = ()=> {
+  keywordInput.value=""; categorySelect.value=""; placeSelect.value="";
+  favOnlyCheck.checked=false; search();
+};
+search();
+
+/* ---------- popup ---------- */
+const overlay = document.getElementById("popupOverlay");
+const imgP = document.getElementById("popupImg");
+const titleP = document.getElementById("popupTitle");
+const timeP = document.getElementById("popupTime");
+const placeP = document.getElementById("popupPlace");
+const descP = document.getElementById("popupDesc");
+const labelP = document.getElementById("popupLabel");
+const favBtn = document.getElementById("favoriteBtn");
+const detailBtn = document.getElementById("detailBtn");
+
+let activeId = null;
+
+window.openPopup = id=>{
+  activeId=id;
+  const e = events.find(v=>v.id===id);
+  const labelClass = e.type==="event"?"event-color":
+                     e.type==="exhibitor"?"exhibitor-color":"project-color";
+  labelP.className = "event-label " + labelClass;
+  labelP.textContent = e.type.toUpperCase();
+  imgP.src = e.image;
+  titleP.textContent = e.title;
+  timeP.textContent = `${e.start}${e.end?"〜"+e.end:""}`;
+  placeP.textContent = `会場：${e.place}`;
+  descP.textContent = e.description;
+
+  favBtn.textContent = favList.includes(id) ? "❤️ お気に入り解除" : "♡ お気に入り";
+  detailBtn.onclick = () => location.href = `detail.html?id=${id}`; // ←後で作成OK
+
+  overlay.style.display="flex";
+};
+document.getElementById("popupClose").onclick = ()=> overlay.style.display="none";
+
+/* ---------- favorite ---------- */
+favBtn.onclick = ()=>{
+  if(!favList.includes(activeId)) favList.push(activeId);
+  else favList = favList.filter(x=>x!==activeId);
+  localStorage.setItem("favEvents",JSON.stringify(favList));
+  overlay.style.display="none";
+  search();
+};
+</script>
+</body>
+</html>
